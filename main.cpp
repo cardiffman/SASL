@@ -140,6 +140,7 @@ struct Node {
 	Node(Node* head, Node* tail) : head(head),tail(tail) {}
 	virtual bool is_atom() const { return false; }
 	virtual void visit(CombVisitor* v)=0;
+	virtual string to_string() const = 0;
 	Node* head;
 	Node* tail;
 };
@@ -149,7 +150,11 @@ struct Comb : public Node {
 	Comb(Node* head, Node* tail) : Node(head, tail) {}
 	virtual bool is_atom() const { return false; }
 	virtual void visit(CombVisitor* v) { v->visitComb(this); };
+	string to_string() const;
 };
+string Comb::to_string() const {
+	return head->to_string()+"(" + (tail?tail->to_string():"NULL");
+}
 #if 0
 struct Atom : public Comb {
 	Atom() {}
@@ -161,145 +166,190 @@ struct SComb : public Comb {
 	SComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitSComb(this); }
+	string to_string() const { return "S"; }
 };
 struct KComb : public Comb {
 	KComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitKComb(this); }
+	string to_string() const { return "K"; }
 };
 struct IComb : public Comb {
 	IComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitIComb(this); }
+	string to_string() const { return "I"; }
 };
 struct YComb : public Comb {
 	YComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitYComb(this); }
+	string to_string() const { return "Y"; }
 };
 struct UComb : public Comb {
 	UComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitUComb(this); }
+	string to_string() const { return "U"; }
 };
 struct PlusComb : public Comb {
 	PlusComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitPlusComb(this); }
+	string to_string() const { return "+"; }
 };
 struct MinusComb : public Comb {
 	MinusComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitMinusComb(this); }
+	string to_string() const { return "-"; }
 };
 struct EqualComb : public Comb {
 	EqualComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitEqualComb(this); }
+	string to_string() const { return "=="; }
 };
 struct PairComb : public Comb {
 	PairComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitPairComb(this); }
+	string to_string() const { return "PP"; }
 };
 struct LessComb : public Comb {
 	LessComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitLessComb(this); }
+	string to_string() const { return "<"; }
 };
 struct TimesComb : public Comb {
 	TimesComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitTimesComb(this); }
+	string to_string() const { return "*"; }
 };
 struct HeadComb : public Comb {
 	HeadComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitHeadComb(this); }
+	string to_string() const { return "HD"; }
 };
 struct TailComb : public Comb {
 	TailComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitTailComb(this); }
+	string to_string() const { return "TL"; }
 };
 struct TrueComb : public Comb {
 	TrueComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitTrueComb(this); }
+	string to_string() const { return "T"; }
 };
 struct FalseComb : public Comb {
 	FalseComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitFalseComb(this); }
+	string to_string() const { return "F"; }
 };
 struct NilComb : public Comb {
 	NilComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitNilComb(this); }
+	string to_string() const { return "NIL"; }
 };
 struct DivideComb : public Comb {
 	DivideComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitDivideComb(this); }
+	string to_string() const { return "/"; }
 };
 struct LessEqComb : public Comb {
 	LessEqComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitLessEqComb(this); }
+	string to_string() const { return "<="; }
 };
 struct OrComb : public Comb {
 	OrComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitOrComb(this); }
+	string to_string() const { return "|"; }
 };
 struct AndComb : public Comb {
 	AndComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitAndComb(this); }
+	string to_string() const { return "&"; }
 };
 struct NotComb : public Comb {
 	NotComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitNotComb(this); }
+	string to_string() const { return "!"; }
 };
 struct BComb : public Comb {
 	BComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitBComb(this); }
+	string to_string() const { return "B"; }
 };
 struct CComb : public Comb {
 	CComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitCComb(this); }
+	string to_string() const { return "C"; }
 };
 struct SDashComb : public Comb {
 	SDashComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitSDashComb(this); }
+	string to_string() const { return "S-"; }
 };
 struct BStarComb : public Comb {
 	BStarComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitBStarComb(this); }
+	string to_string() const { return "B*"; }
 };
 struct CDashComb : public Comb {
 	CDashComb() {}
 	virtual bool is_atom() const { return true; }
 	virtual void visit(CombVisitor* v) { v->visitCDashComb(this); }
+	string to_string() const { return "C-"; }
 };
 struct Int : public Node {
 	Int(int v) : v(v) {}
-	virtual void visit(CombVisitor* v) { v->visitInt(this); }
+	void visit(CombVisitor* v) { v->visitInt(this); }
+	string to_string() const { return "Int("+std::to_string(v)+")"; }
 	int v;
 };
 struct Pair : public Comb {
-	Pair(Node* head_, Node* tail_) : Comb(head,tail){}
+	Pair(Node* head_, Node* tail_) : Comb(head_,tail_){}
 	virtual void visit(CombVisitor* v) { v->visitPair(this); }
+	string to_string() const;
 };
+/*
+ * Type Pair is a node that represents a pair of things.
+ * Contrast PairComb which is a combinator that makes pairs of things.
+ */
+string Pair::to_string() const {
+	string out = "[" + head->to_string();
+	Node* n = tail;
+	Pair* np = dynamic_cast<Pair*>(n);
+	while (np) {
+		out += ',';
+		out += n->to_string();
+		n = np->tail;
+		np = dynamic_cast<Pair*>(n);
+	}
+	return out;
+}
 struct Variable : public Node {
 	Variable(const string& a) : var_name(a) {} // what goes here?
 	virtual void visit(CombVisitor* v) { v->visitVariable(this); }
 	string var_name;
+	string to_string() const { return "Var("+var_name+")"; }
 };
 
 /*
@@ -444,6 +494,8 @@ FalseComb *falsec;
 struct Cond : public Comb {
 	Cond() : Comb() {}
 	void visit(CombVisitor* v) { v->visitCond(this); }
+	string to_string() const { return "if"; }
+	bool is_atom() const { return true; }
 };
 Cond *cond = new Cond();
 UComb *U; YComb *Y;
@@ -554,42 +606,62 @@ enum token_type {
     TOKEN_OR,TOKEN_AND,TOKEN_NOT, TOKEN_TRUE, TOKEN_FALSE, TOKEN_EOF
 };
 
-typedef struct {
+struct token {
     token_type type;
     string string_value;
     union {
         token_type *token_value;
         int int_value;
     } value;
-} token;
+    token(token_type type, const string& string_value)
+    : type(type)
+    , string_value(string_value)
+    {
+
+    }
+    token(token_type type, token_type* tv)
+    : type(type)
+    {
+        value.token_value=(tv);
+
+    }
+    token(token_type type, int tv)
+    : type(type)
+    {
+        value.int_value=(tv);
+
+    }
+};
 
 token *current_token;
 
 token *make_token_string(token_type t, const string& v) {
-    token *tok = (token *)allocate_memory(sizeof(token));
-
-    tok->type = t;
-    tok->string_value = v;
-
+	token* tok = new token(t, v);
     return tok;
 }
 
 token *make_token_token(token_type t,token_type *v) {
+	return new token(t, v);
+#if 0
     token *tok = (token *)allocate_memory(sizeof(token));
 
     tok->type = t;
     tok->value.token_value = v;
 
     return tok;
+#endif
 }
 
 token *make_token_int(token_type t,int v) {
+	return new token(t, v);
+#if 0
     token *tok = (token *)allocate_memory(sizeof(token));
 
     tok->type = t;
     tok->value.int_value = v;
 
     return tok;
+#endif
 }
 
 dictionary keywords;
@@ -601,7 +673,7 @@ dictionary keywords;
 token *lex_keyword_or_identifier() {
     /* Potential buffer overflow */
     string name;
-    int i = 0;
+    //int i = 0;
 
     name.append(1, current_char);
     next_char();
@@ -623,14 +695,13 @@ token *lex_keyword_or_identifier() {
  * digit.
  */
 int get_number() {
-	token t;
-	t.value.int_value = current_char - '0';
+	int int_value = current_char - '0';
 	next_char();
 	while (isdigit(current_char)) {
-		t.value.int_value = t.value.int_value*10 + current_char-'0';
+		int_value = int_value*10 + current_char-'0';
 		next_char();
 	}
-	return t.value.int_value;
+	return int_value;
 }
 
 token *lex_numeric_constant() {
@@ -848,7 +919,7 @@ Node *parse_comparisonexpr() {
  * LOGICALPRODUCT := COMPARISONEXPR { 'and' COMPARISONEXPR }
  */
 Node *parse_logicalproduct() {
-    Node *r = parse_comparisonexpr(),*cor;
+    Node *r = parse_comparisonexpr();
     r = parse_sequence(r,TOKEN_AND,parse_comparisonexpr,cand);
     return r;
 }
@@ -893,7 +964,7 @@ Node *parse_listexpr() {
 
 Node *parse_abstraction();
 Comb *parse_recursive_abstraction(Comb *name);
-Comb *abstract(Variable *var,Comb *expr);
+Node *abstract(Variable *var,Node *expr);
 int mutual_recursion(list<pair<Variable*,Node*>> const & l);
 
 void display(Node *);
@@ -907,14 +978,14 @@ void display(Node *);
  *	{ WHERE NAME ABSTRACTION ';' { NAME ABSTRACTION ';' } }
  */
 Node *parse_expr() {
-    Node *r,*abstraction;
+    Node *r;//,*abstraction;
     if (current_token->type==TOKEN_IF) {
 	    return parse_condexpr();
     }
     r = parse_listexpr();
     for (;;) {
 	if (current_token->type==TOKEN_WHERE) {
-	    Comb *dstart;
+	    //Comb *dstart;
 	    list<pair<Variable*,Node*>> definitions;
 	    Variable *name; Comb *lhs,*rhs;
 
@@ -1013,11 +1084,13 @@ string get_var(Node *a) {
  * <s>any variable in the list 'var'.</s>
  * var
  */
-int depends_on(Node *expr, Variable *var) {
+bool depends_on(Node *expr, Variable *var) {
 	auto vexpr = dynamic_cast<Variable*>(expr);
 	if (vexpr) {
 		return vexpr->var_name == var->var_name;
 	}
+	if (is_int(expr) || is_atom(expr))
+		return false;
 	return depends_on(H(expr), var) || depends_on(T(expr), var);
 }
 
@@ -1044,7 +1117,7 @@ int mutual_recursion(list<pair<Variable*,Node*>> const & l) {
 
 Node *abstract(Variable *var,Node *expr) {
 	auto vexpr = dynamic_cast<Variable*>(expr);
-	if (vexpr->var_name == var->var_name)
+	if (vexpr && (vexpr->var_name == var->var_name))
 		return I;
     if (is_int(expr) || is_var(expr) || is_atom(expr)) {
 	return apply(K,expr);
@@ -1102,6 +1175,7 @@ Node *parse_abstraction() {
      */
     current_token = lex();
     expr = parse_expr();
+    display(expr);
     while (names.size()) {
 		expr = abstract(names.front(),expr);
 		names.pop_front();
@@ -1196,8 +1270,9 @@ struct DisplayVisitor : public CombVisitor {
 
 };
 void display(Node *l) {
-	DisplayVisitor v;
-	l->visit(&v);
+	//DisplayVisitor v;
+	//l->visit(&v);
+	cerr << l->to_string();
 }
 
 /*
@@ -1245,15 +1320,70 @@ Node *parse_program() {
 /*
  * Compare two lists for equality.
  */
+int list_eq(Node *a,Node *b);
+struct EqualityVisitor : public CombVisitor {
+	EqualityVisitor(Node* other) : other(other), result(false) {}
+	Node* other;
+	bool result;
+	void visitComb(Comb*) { }
+#if 0
+	void visitAtom(Atom*) { }
+#else
+	void visitSComb(SComb*) { }
+	void visitKComb(KComb*) { }
+	void visitIComb(IComb*) { }
+	void visitUComb(UComb*) { }
+	void visitYComb(YComb*) { }
+#endif
+	void visitInt(Int* e) {
+		auto pi = dynamic_cast<Int*>(other);
+		if (pi) {
+			result = pi->v == e->v;
+		}
+	}
+	void visitPair(Pair* p) {
+		auto po = dynamic_cast<Pair*>(other);
+		if (po) {
+			EqualityVisitor v2(other->head);
+			EqualityVisitor v3(other->tail);
+			result = list_eq(p->head, po->head) && list_eq(p->tail, po->tail);
+		}
+	}
+	void visitVariable(Variable* v) {
+		cout << "Var(" << v->var_name << ")";
+	}
+	void visitCond(Cond*) { }
+	void visitPlusComb(PlusComb*) { }
+	void visitMinusComb(MinusComb*) { }
+	void visitEqualComb(EqualComb*) { }
+	void visitPairComb(PairComb*) { }
+	void visitLessComb(LessComb*) { }
+	void visitTimesComb(TimesComb*) { }
+	void visitHeadComb(HeadComb*) { }
+	void visitTailComb(TailComb*) { }
+	void visitTrueComb(TrueComb*) { }
+	void visitFalseComb(FalseComb*) { }
+	void visitNilComb(NilComb*) { }
+	void visitDivideComb(DivideComb*) { }
+	void visitLessEqComb(LessEqComb*) { }
+	void visitOrComb(OrComb*) {  }
+	void visitAndComb(AndComb*) {  }
+	void visitNotComb(NotComb*) { }
+	void visitBComb(BComb*) { }
+	void visitCComb(CComb*) { }
+	void visitSDashComb(SDashComb*) { }
+	void visitBStarComb(BStarComb*) { }
+	void visitCDashComb(CDashComb*) { }
+};
 int list_eq(Node *a,Node *b) {
 	//if (a->type != b->type) {
 	//	return 0;
 	//}
-	auto aa = dynamic_cast<Atom*>(a);
-	if (aa) {
-		auto ba = dynamic_cast<Atom*>(b);
-		return ba && (get_atom(aa) == get_atom(ba));
-	}
+	//auto aa = dynamic_cast<Atom*>(a);
+	//if (aa) {
+	//	auto ba = dynamic_cast<Atom*>(b);
+	//	return ba && (get_atom(aa) == get_atom(ba));
+	//}
 	auto ap = dynamic_cast<Pair*>(a);
 	if (ap) {
 		auto bp = dynamic_cast<Pair*>(b);
@@ -1420,28 +1550,41 @@ struct EvalVisitor : public CombVisitor {
 #if 0
 	void visitAtom(Atom* e) {  }
 #else
-	void visitSComb(SComb* e) {  }
-	void visitKComb(KComb* e) {  }
-	void visitIComb(IComb* e) {
+	void visitSComb(SComb*) {  }
+	void visitKComb(KComb*) {
+		if (sp < 2)
+			return;
+		Node *a = stack[sp];
+		sp -= 2;
+		stack[sp] = a;
+	}
+	void visitIComb(IComb*) {
 		if (sp < 1)
 			return;
 		sp--;
 	}
-	void visitUComb(UComb* e) {  }
-	void visitYComb(YComb* e) {
+	void visitUComb(UComb*) {
+		if (sp < 2)
+			return;
+		Node *a = stack[sp];
+		Node *b = stack[sp - 2];
+		stack[sp] = a;
+		stack[sp - 1] = apply(head, b);
+		stack[sp - 2] = apply(tail, b);
+	}
+	void visitYComb(YComb*) {
 		if (sp < 1)
 			return;
 		Node *a = stack[sp];
 		--sp;
 		stack[sp] = apply(a, apply(Y, a));
-		continue;
 	}
 #endif
-	void visitInt(Int* e) {  }
-	void visitPair(Pair* p) { }
-	void visitVariable(Variable* v) { }
-	void visitCond(Cond* e) {}
-	void visitPlusComb(PlusComb* e) {
+	void visitInt(Int*) {  }
+	void visitPair(Pair*) { }
+	void visitVariable(Variable*) { }
+	void visitCond(Cond*) {}
+	void visitPlusComb(PlusComb*) {
 		if (sp < 2)
 			return;
 		Node *a = stack[sp];
@@ -1451,7 +1594,7 @@ struct EvalVisitor : public CombVisitor {
 		sp -= 2;
 		stack[sp] = make_int(get_int(a) + get_int(b));
 	}
-	void visitMinusComb(MinusComb* e) {
+	void visitMinusComb(MinusComb*) {
 		if (sp < 2)
 			return;
 		Node *a = stack[sp];
@@ -1462,22 +1605,9 @@ struct EvalVisitor : public CombVisitor {
 		stack[sp] = make_int(get_int(a) - get_int(b));
 #if 0
 		switch (combinator) {
-		case 'K':
-			sp -= 2;
-			stack[sp] = a;
-			continue;
 		case ':':
 			sp -= 2;
 			stack[sp] = sapl::make_pair(a, b);
-			continue;
-		case 'U':
-			stack[sp] = a;
-			stack[sp - 1] = apply(head, b);
-			stack[sp - 2] = apply(tail, b);
-			continue;
-		case '+':
-			continue;
-		case '-':
 			continue;
 		case '*':
 			a = stack_eval(a);
@@ -1525,11 +1655,45 @@ struct EvalVisitor : public CombVisitor {
 			continue;
 #endif
 	}
-	void visitEqualComb(EqualComb* e) {}
-	void visitPairComb(PairComb* e) {}
-	void visitLessComb(LessComb* e) {}
-	void visitTimesComb(TimesComb* e) {}
-	void visitHeadComb(HeadComb* e) {
+	void visitEqualComb(EqualComb*) {
+		if (sp < 2)
+			return;
+		Node *a = stack[sp];
+		Node *b = stack[sp - 2];
+		a = stack_eval(a);
+		b = stack_eval(b);
+		sp -= 2;
+		stack[sp] = list_eq(a, b) ? (Node*)truec : (Node*)falsec;
+	}
+	void visitPairComb(PairComb*) {
+		if (sp < 2)
+			return;
+		Node *a = stack[sp];
+		Node *b = stack[sp - 2];
+		sp -= 2;
+		stack[sp] = sapl::make_pair(a, b);
+	}
+	void visitLessComb(LessComb*) {
+		if (sp < 2)
+			return;
+		Node *a = stack[sp];
+		Node *b = stack[sp - 2];
+		a = stack_eval(a);
+		b = stack_eval(b);
+		sp -= 2;
+		stack[sp] = list_lt(a, b) ? (Node*)truec : (Node*)falsec;
+	}
+	void visitTimesComb(TimesComb*) {
+		if (sp < 2)
+			return;
+		Node *a = stack[sp];
+		Node *b = stack[sp - 2];
+		a = stack_eval(a);
+		b = stack_eval(b);
+		sp -= 2;
+		stack[sp] = make_int(get_int(a) * get_int(b));
+	}
+	void visitHeadComb(HeadComb*) {
 		if (sp < 1)
 			return;
 		Node *a = stack[sp - 1];
@@ -1540,7 +1704,7 @@ struct EvalVisitor : public CombVisitor {
 		}
 		stack[sp] = H(a);
 	}
-	void visitTailComb(TailComb* e) {
+	void visitTailComb(TailComb*) {
 		if (sp < 1)
 			return;
 		Node *a = stack[sp - 1];
@@ -1551,26 +1715,43 @@ struct EvalVisitor : public CombVisitor {
 		}
 		stack[sp] = T(a);
 	}
-	void visitTrueComb(TrueComb* e) { }
-	void visitFalseComb(FalseComb* e) {  }
-	void visitNilComb(NilComb* e) {  }
-	void visitDivideComb(DivideComb* e) {  }
-	void visitLessEqComb(LessEqComb* e) {  }
-	void visitOrComb(OrComb* e) {  }
-	void visitAndComb(AndComb* e) {  }
-	void visitNotComb(NotComb* e) {
+	void visitTrueComb(TrueComb*) { }
+	void visitFalseComb(FalseComb*) {  }
+	void visitNilComb(NilComb*) {  }
+	void visitDivideComb(DivideComb*) {
+		if (sp < 2)
+			return;
+		Node *a = stack[sp];
+		Node *b = stack[sp - 2];
+		a = stack_eval(a);
+		b = stack_eval(b);
+		sp -= 2;
+		stack[sp] = make_int(get_int(a) / get_int(b));
+	}
+	void visitLessEqComb(LessEqComb*) {
+		if (sp < 2)
+			return;
+		Node *a = stack[sp];
+		Node *b = stack[sp - 2];
+		a = stack_eval(a);
+		b = stack_eval(b);
+		sp -= 2;
+		stack[sp] = list_le(a, b) ? (Node*)truec : (Node*)falsec;
+	}
+	void visitOrComb(OrComb*) {  }
+	void visitAndComb(AndComb*) {  }
+	void visitNotComb(NotComb*) {
 		if (sp < 1)
 			return;
 		Node *a = stack[sp - 1];
 		--sp;
-		stack[sp] = a == truec ? falsec : truec;
-		continue;
+		stack[sp] = a == truec ? (Node*)falsec : (Node*)truec;
 	}
-	void visitBComb(BComb* e) {  }
-	void visitCComb(CComb* e) {  }
-	void visitSDashComb(SDashComb* e) {  }
-	void visitBStarComb(BStarComb* e) {  }
-	void visitCDashComb(CDashComb* e) {  }
+	void visitBComb(BComb*) {  }
+	void visitCComb(CComb*) {  }
+	void visitSDashComb(SDashComb*) {  }
+	void visitBStarComb(BStarComb*) {  }
+	void visitCDashComb(CDashComb*) {  }
 
 };
 /*
@@ -1593,6 +1774,8 @@ Node *stack_eval(Node *a) {
     while (true) {
     	stack[sp]->visit(&eval);
     }
+    return result;
+#if 0
 	while (1) {
 		if (is_comb(stack[sp])) {
 			/*
@@ -1624,7 +1807,7 @@ Node *stack_eval(Node *a) {
 				continue;
 			case '!':
 				--sp;
-				stack[sp] = a == truec ? falsec : truec;
+				//stack[sp] = a == truec ? falsec : truec;
 				continue;
 			case 't':
 				--sp;
@@ -1673,39 +1856,39 @@ Node *stack_eval(Node *a) {
 						a = stack_eval(a);
 						b = stack_eval(b);
 						sp -= 2;
-						stack[sp] = make_int(get_int(a) / get_int(b));
+						//stack[sp] = make_int(get_int(a) / get_int(b));
 						continue;
 					case '=':
 						a = stack_eval(a);
 						b = stack_eval(b);
 						sp -= 2;
-						stack[sp] = list_eq(a, b) ? truec : falsec;
+						//stack[sp] = list_eq(a, b) ? truec : falsec;
 						continue;
 					case '<':
 						a = stack_eval(a);
 						b = stack_eval(b);
 						sp -= 2;
-						stack[sp] = list_lt(a, b) ? truec : falsec;
+						//stack[sp] = list_lt(a, b) ? truec : falsec;
 						continue;
 					case 'l':
 						a = stack_eval(a);
 						b = stack_eval(b);
 						sp -= 2;
-						stack[sp] = list_le(a, b) ? truec : falsec;
+						//stack[sp] = list_le(a, b) ? truec : falsec;
 						continue;
 					case '|':
 						a = stack_eval(a);
 						sp -= 2;
-						stack[sp] =
+						/*stack[sp] =
 								(a == truec || stack_eval(b) == truec) ?
-										truec : falsec;
+										truec : falsec;*/
 						continue;
 					case '&':
 						a = stack_eval(a);
 						sp -= 2;
-						stack[sp] =
+						/*stack[sp] =
 								(a == falsec || stack_eval(b) == falsec) ?
-										falsec : truec;
+										falsec : truec;*/
 						continue;
 					default:
 						if (sp >= 3) {
@@ -1771,6 +1954,7 @@ Node *stack_eval(Node *a) {
 		}
 		break;
 	}
+#endif
 
 	/*
 	 * Reassemble result
