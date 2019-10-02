@@ -9,9 +9,16 @@
 #include <list>
 #include <stack>
 #include <vector>
+#include <memory>
 
 using namespace std;
 
+/*
+ * 10/1/19
+ * Conversion to C++
+ * Conversion of list_t to Node class heirarchy,
+ * with visitor pattern for implementing certain things.
+ */
 /*
  * 7/5/05
  * Fixed memory leak (when using GC) in strdup.
@@ -24,38 +31,6 @@ using namespace std;
  * Fixed parsing of binary operators.
  */
 
-#if 0
-/*
- * #define COLLECT_GARBAGE
- * If you want to use the Boehm-Demers-Weiser garbage collector.
- *
- * Portability issues:
- * Assumes int is as long as a pointer.
- */
-
-#if defined(COLLECT_GARBAGE)
-#include "gc.h"
-#include "gc_typed.h"
-#endif
-
-#if defined(COLLECT_GARBAGE)
-void *allocate_memory(size_t n) {
-	return GC_malloc(n);
-}
-#else
-void *allocate_memory(size_t n) {
-	return malloc(n);
-}
-char* allocate_chars(size_t n) {
-	return (char*)allocate_memory(n);
-}
-#endif
-
-char *duplicate_string(const char *s) {
-    return strcpy(allocate_chars(strlen(s)+1),s);
-}
-
-#endif
 
 int current_char;
 
@@ -156,15 +131,8 @@ struct Comb : public Node {
 	string to_string() const;
 };
 string Comb::to_string() const {
-	return head->to_string()+"(" + (tail?tail->to_string():"NULL") + ")";
+	return (head?head->to_string():"NULL")+"(" + (tail?tail->to_string():"NULL") + ")";
 }
-#if 0
-struct Atom : public Comb {
-	Atom() {}
-	virtual bool is_atom() const { return true; }
-	virtual void visit(CombVisitor* v) { v->visitAtom(this); }
-};
-#endif
 struct SComb : public Comb {
 	SComb() {}
 	virtual bool is_atom() const { return true; }
@@ -1503,10 +1471,13 @@ struct EvalVisitor : public CombVisitor {
 			return;
 		Node *a = stack[sp - 1];
 		Node *b = stack[sp - 2];
+		cout << a->to_string() << "+" << b->to_string() << endl;
 		a = stack_eval(a);
 		b = stack_eval(b);
+		cout << a->to_string() << "+" << b->to_string() << endl;
 		sp -= 2;
 		stack[sp] = make_int(get_int(a) + get_int(b));
+		cout << stack[sp]->to_string() << endl;
 	}
 	void visitMinusComb(MinusComb*) {
 		if (sp < 2)
@@ -1561,10 +1532,13 @@ struct EvalVisitor : public CombVisitor {
 			return;
 		Node *a = stack[sp - 1];
 		Node *b = stack[sp - 2];
+		cout << a->to_string() << "/" << b->to_string() << endl;
 		a = stack_eval(a);
 		b = stack_eval(b);
+		cout << a->to_string() << "/" << b->to_string() << endl;
 		sp -= 2;
 		stack[sp] = make_int(get_int(a) / get_int(b));
+		cout << stack[sp]->to_string() << endl;
 	}
 	void visitLessEqComb(LessEqComb*) {
 		if (sp < 2)
@@ -1724,8 +1698,9 @@ Node *stack_eval(Node *a) {
 	 * But we musn't copy atoms as they are unique.
 	 */
 	if (is_comb(a) && !is_atom(result)) {
-		*a = *result;
-		return a;
+		// bad*a = *result;
+		//return a;
+		return result; // FIXME
 	} else {
 		return result;
 	}
